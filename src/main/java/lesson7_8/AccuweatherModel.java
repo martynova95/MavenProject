@@ -1,4 +1,4 @@
-package lesson7;
+package lesson7_8;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class AccuweatherModel implements WeatherModel {
 
@@ -54,7 +55,14 @@ public class AccuweatherModel implements WeatherModel {
                 Response oneDayResponse = okHttpClient.newCall(request).execute();
                 String oneDayResponseString = oneDayResponse.body().string();
                 WeatherResponse w1 = new WeatherResponse(1, oneDayResponseString, city);
-                System.out.println(w1.getResult());
+                DataBaseRepository db1 = new DataBaseRepository();
+
+                System.out.println(w1.WeatherCalculations());
+                try {
+                    System.out.println(db1.saveWeatherToDataBase(w1.WeatherCalculations()));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
 
             case FIVE_DAYS:
@@ -78,7 +86,14 @@ public class AccuweatherModel implements WeatherModel {
                 Response fiveDayResponse = okHttpClient.newCall(requestFiveDay).execute();
                 String fiveDayResponseString = fiveDayResponse.body().string();
                 WeatherResponse w2 = new WeatherResponse(5, fiveDayResponseString, city);
-                System.out.println(w2.getResult());
+                DataBaseRepository db2 = new DataBaseRepository();
+
+                System.out.println(w2.WeatherCalculations());
+                try {
+                    System.out.println(db2.saveWeatherToDataBase(w2.WeatherCalculations()));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
     }

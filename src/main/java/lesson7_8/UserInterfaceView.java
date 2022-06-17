@@ -1,6 +1,7 @@
-package lesson7;
+package lesson7_8;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,7 @@ public class UserInterfaceView {
             String city = scanner.nextLine();
 
             System.out.println("Введите 1 для получения погоды на сегодня;" +
+                    "2 - для загрузки погоды из базы данных;" +
                     "5 - для получения погоды на 5 дней;" +
                     "0 - для выхода.");
             String command = scanner.nextLine();
@@ -22,7 +24,7 @@ public class UserInterfaceView {
             if ("0".equals(command))
                 break;
 
-            if (!Pattern.matches("[1,5,0]", command)) {
+            if (!Pattern.matches("[1,2,5,0]", command)) {
                 System.out.println("Введите корректную цифру...");
                 continue;
             }
@@ -31,7 +33,9 @@ public class UserInterfaceView {
                     controller.getWeather(command, city);
                 } catch (IOException e) {
                     System.out.println("При получении погоды произошла ошибка! Попробуйте позже.");
-                }
+                } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             }
         }
 
